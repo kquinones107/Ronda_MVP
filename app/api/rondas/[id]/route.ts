@@ -1,0 +1,2 @@
+import {database,identity,json,failure,ApiError} from "../../../../lib/server";
+export async function DELETE(request:Request,{params}:{params:Promise<{id:string}>}){try{const user=await identity(request);const {id}=await params;const result=await database().prepare("UPDATE rondas SET status='cancelled' WHERE id=? AND owner_id=? AND status='live'").bind(id,user.userId).run();if(!result.meta.changes)throw new ApiError(404,"No encontramos una ronda tuya que se pueda cancelar.");return json({ok:true});}catch(e){return failure(e);}}
